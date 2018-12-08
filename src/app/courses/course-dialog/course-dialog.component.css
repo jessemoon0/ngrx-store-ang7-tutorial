@@ -1,0 +1,19 @@
+
+
+.mat-form-field {
+    display: block;
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.promo-label {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 13px;
+}
+
+mat-slide-toggle {
+  margin-bottom: 20px;
+}
