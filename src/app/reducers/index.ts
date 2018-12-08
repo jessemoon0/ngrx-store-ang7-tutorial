@@ -7,6 +7,8 @@ import {
 } from '@ngrx/store';
 import { environment } from '../../environments/environment';
 import { AuthState } from '../auth/auth.reducer';
+import { storeFreeze } from 'ngrx-store-freeze';
+import { routerReducer } from '@ngrx/router-store';
 
 export interface AppState {
   // auth: AuthState;
@@ -14,6 +16,8 @@ export interface AppState {
   // lessons: LessonsState;
 }
 
-export const reducers: ActionReducerMap<AppState> = {};
+export const reducers: ActionReducerMap<AppState> = {
+  router: routerReducer
+};
 
-export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [] : [];
+export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [storeFreeze] : [];
