@@ -26,28 +26,25 @@ export class CourseComponent implements OnInit, AfterViewInit {
     constructor(private route: ActivatedRoute, private coursesService: CoursesService) {}
 
     ngOnInit() {
-
       this.course = this.route.snapshot.data['course'];
       this.dataSource = new LessonsDataSource(this.coursesService);
       this.dataSource.loadLessons(this.course.id, 0, 3);
-
     }
 
     ngAfterViewInit() {
-
         this.paginator.page
         .pipe(
             tap(() => this.loadLessonsPage())
         )
         .subscribe();
-
     }
 
     loadLessonsPage() {
       this.dataSource.loadLessons(
-          this.course.id,
-          this.paginator.pageIndex,
-          this.paginator.pageSize);
+        this.course.id,
+        this.paginator.pageIndex,
+        this.paginator.pageSize
+      );
     }
 
 
