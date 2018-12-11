@@ -1,11 +1,14 @@
 import { Action } from '@ngrx/store';
 import { Course } from './model/course';
+import { Update } from '@ngrx/entity';
 
 export enum CoursesActionTypes {
   CourseRequested = '[View Course Page] Course Requested',
   CourseLoaded = '[Courses API] Course Loaded',
   AllCoursesRequested = '[Courses Home Page] All Courses Requested',
   AllCoursesLoaded = '[Courses API] ALL Courses Loaded',
+  
+  CourseSaved = '[Edit Course Dialog] Course Saved'
 }
 
 export class CourseRequested implements Action {
@@ -27,4 +30,9 @@ export class AllCoursesLoaded implements Action {
   constructor(public payload: { courses: Course[] }) {}
 }
 
-export type CourseActions = CourseRequested | CourseLoaded | AllCoursesRequested | AllCoursesLoaded;
+export class CourseSaved implements Action {
+  readonly type = CoursesActionTypes.CourseSaved;
+  constructor(public payload: {course: Update<Course>}) {}
+}
+
+export type CourseActions = CourseRequested | CourseLoaded | AllCoursesRequested | AllCoursesLoaded | CourseSaved;
