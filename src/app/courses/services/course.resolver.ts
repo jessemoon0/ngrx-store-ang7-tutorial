@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { CoursesService } from './courses.service';
 import { AppState } from '../../reducers';
 import { select, Store } from '@ngrx/store';
-import { selectCourseById } from '../course.selectors';
+import { selectCourseById } from '../courses.selectors';
 import { filter, first, tap } from 'rxjs/operators';
 import { CourseRequested } from '../courses.actions';
 

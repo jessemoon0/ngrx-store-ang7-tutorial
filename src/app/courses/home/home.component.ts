@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from '../model/course';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { CoursesService } from '../services/courses.service';
 import { AppState } from '../../reducers';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
+import { selectAdvancedCourses, selectBeginnerCourses, selectPromoTotals } from '../courses.selectors';
+import { AllCoursesRequested } from '../courses.actions';
 
 @Component({
     selector: 'home',
@@ -19,23 +19,35 @@ export class HomeComponent implements OnInit {
 
     advancedCourses$: Observable<Course[]>;
 
-    constructor(private coursesService: CoursesService, private store: Store<AppState>) { }
+    constructor(private store: Store<AppState>) { }
 
     ngOnInit() {
+      
+      this.store.dispatch(new AllCoursesRequested());
+      
+      // If we want to select all courses
+      // const courses$ = this.store.pipe(
+      //   select(selectAllCourses)
+      // );
+      
+      this.beginnerCourses$ = this.store.pipe(select(selectBeginnerCourses));
+      this.advancedCourses$ = this.store.pipe(select(selectAdvancedCourses));
+      this.promoTotal$ = this.store.pipe(select(selectPromoTotals));
+  
+      // THE WAY IT WAS BEFORE THE STORE
+      // const courses$ = this.coursesService.findAllCourses();
 
-        const courses$ = this.coursesService.findAllCourses();
-
-        this.beginnerCourses$ = courses$.pipe(
-          map(courses => courses.filter(course => course.category === 'BEGINNER') )
-        );
-
-        this.advancedCourses$ = courses$.pipe(
-            map(courses => courses.filter(course => course.category === 'ADVANCED') )
-        );
-
-        this.promoTotal$ = courses$.pipe(
-            map(courses => courses.filter(course => course.promo).length)
-        );
+      // this.beginnerCourses$ = courses$.pipe(
+      //   map(courses => courses.filter(course => course.category === 'BEGINNER') )
+      // );
+      //
+      // this.advancedCourses$ = courses$.pipe(
+      //     map(courses => courses.filter(course => course.category === 'ADVANCED') )
+      // );
+      //
+      // this.promoTotal$ = courses$.pipe(
+      //     map(courses => courses.filter(course => course.promo).length)
+      // );
 
     }
 
