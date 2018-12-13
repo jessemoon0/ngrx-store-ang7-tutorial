@@ -6,6 +6,9 @@ import {CoursesService} from '../services/courses.service';
 import {debounceTime, distinctUntilChanged, startWith, tap, delay} from 'rxjs/operators';
 import {merge, fromEvent} from 'rxjs';
 import {LessonsDataSource} from '../services/lessons.datasource';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../reducers';
+import { IPageQuery } from '../model/Page.interface';
 
 
 @Component({
@@ -23,12 +26,22 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     
-    constructor(private route: ActivatedRoute, private coursesService: CoursesService) {}
+    constructor(
+      private route: ActivatedRoute,
+      private coursesService: CoursesService,
+      private store: Store<AppState>
+    ) {}
 
     ngOnInit() {
       this.course = this.route.snapshot.data['course'];
-      this.dataSource = new LessonsDataSource(this.coursesService);
-      this.dataSource.loadLessons(this.course.id, 0, 3);
+      // this.dataSource = new LessonsDataSource(this.coursesService);
+      // this.dataSource.loadLessons(this.course.id, 0, 3);
+      this.dataSource = new LessonsDataSource(this.coursesService, this.store);
+      const initialPage: IPageQuery = {
+        pageIndex: 0,
+        pageSize: 3
+      };
+      this.dataSource.loadLessons(this.course.id, initialPage);
     }
 
     ngAfterViewInit() {

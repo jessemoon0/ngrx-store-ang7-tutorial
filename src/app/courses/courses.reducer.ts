@@ -13,7 +13,7 @@ export const adapter: EntityAdapter<Course> = createEntityAdapter<Course>();
 
 // export const initialCoursesState: CoursesState = adapter.getInitialState();
 // We need to add the custom allCoursesHaveBeenLoaded initial state:
-export const initialCoursesState: CoursesState = adapter.getInitialState({
+export const initialCoursesState = adapter.getInitialState({
   allCoursesHaveBeenLoaded: false
 });
 
