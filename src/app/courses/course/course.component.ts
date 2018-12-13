@@ -4,11 +4,12 @@ import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {Course} from '../model/course';
 import {CoursesService} from '../services/courses.service';
 import {debounceTime, distinctUntilChanged, startWith, tap, delay} from 'rxjs/operators';
-import {merge, fromEvent} from 'rxjs';
+import { merge, fromEvent, Observable } from 'rxjs';
 import {LessonsDataSource} from '../services/lessons.datasource';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { AppState } from '../../reducers';
 import { IPageQuery } from '../model/Page.interface';
+import { selectLessonsLoading } from '../courses.selectors';
 
 
 @Component({
@@ -18,47 +19,53 @@ import { IPageQuery } from '../model/Page.interface';
 })
 export class CourseComponent implements OnInit, AfterViewInit {
 
-    course: Course;
+  course: Course;
+  dataSource: LessonsDataSource;
+  displayedColumns = ['seqNo', 'description', 'duration'];
+  @ViewChild(MatPaginator)
+    paginator: MatPaginator;
+  loading$: Observable<boolean>;
+  
+  constructor(
+    private route: ActivatedRoute,
+    private coursesService: CoursesService,
+    private store: Store<AppState>
+  ) {}
 
-    dataSource: LessonsDataSource;
-
-    displayedColumns = ['seqNo', 'description', 'duration'];
-
-    @ViewChild(MatPaginator) paginator: MatPaginator;
+  ngOnInit() {
+    this.course = this.route.snapshot.data['course'];
+    // this.dataSource = new LessonsDataSource(this.coursesService);
+    // this.dataSource.loadLessons(this.course.id, 0, 3);
     
-    constructor(
-      private route: ActivatedRoute,
-      private coursesService: CoursesService,
-      private store: Store<AppState>
-    ) {}
+    this.loading$ = this.store.pipe(
+      select(selectLessonsLoading())
+    );
+    
+    this.dataSource = new LessonsDataSource(this.coursesService, this.store);
+    const initialPage: IPageQuery = {
+      pageIndex: 0,
+      pageSize: 3
+    };
+    this.dataSource.loadLessons(this.course.id, initialPage);
+  }
 
-    ngOnInit() {
-      this.course = this.route.snapshot.data['course'];
-      // this.dataSource = new LessonsDataSource(this.coursesService);
-      // this.dataSource.loadLessons(this.course.id, 0, 3);
-      this.dataSource = new LessonsDataSource(this.coursesService, this.store);
-      const initialPage: IPageQuery = {
-        pageIndex: 0,
-        pageSize: 3
-      };
-      this.dataSource.loadLessons(this.course.id, initialPage);
-    }
+  ngAfterViewInit() {
+      this.paginator.page
+      .pipe(
+          tap(() => this.loadLessonsPage())
+      )
+      .subscribe();
+  }
 
-    ngAfterViewInit() {
-        this.paginator.page
-        .pipe(
-            tap(() => this.loadLessonsPage())
-        )
-        .subscribe();
-    }
-
-    loadLessonsPage() {
-      this.dataSource.loadLessons(
-        this.course.id,
-        this.paginator.pageIndex,
-        this.paginator.pageSize
-      );
-    }
-
-
+  private loadLessonsPage() {
+    const newPage: IPageQuery = {
+      pageIndex: this.paginator.pageIndex,
+      pageSize: this.paginator.pageSize
+    };
+    this.dataSource.loadLessons(
+      this.course.id,
+      newPage
+    );
+  }
+  
 }

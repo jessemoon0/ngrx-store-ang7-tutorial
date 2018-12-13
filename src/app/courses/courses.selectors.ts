@@ -58,3 +58,8 @@ export const selectLessonsPage = (courseId: number, page: IPageQuery) => createS
       .filter((lessons) => lessons.courseId === courseId).slice(start, end);
   }
 );
+
+export const selectLessonsLoading = () => createSelector(
+  selectLessonsState,
+  coursesState => coursesState.loading
+);
