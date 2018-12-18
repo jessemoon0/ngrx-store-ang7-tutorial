@@ -27,6 +27,11 @@ export const initialLessonsState: LessonsState = adapter.getInitialState({
 export function lessonsReducer(state = initialLessonsState, action: CourseActions): LessonsState {
   switch (action.type) {
     
+    case CoursesActionTypes.LessonsPageCanceled:
+      return {
+        ...state,
+        loading: false
+      };
     case CoursesActionTypes.LessonsPageRequested:
       return {
         ...state,

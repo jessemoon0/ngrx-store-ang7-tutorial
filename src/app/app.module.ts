@@ -44,7 +44,6 @@ const routes: Routes = [
         AppComponent
     ],
     imports: [
-      BrowserModule,
       BrowserAnimationsModule,
       RouterModule.forRoot(routes),
       HttpClientModule,

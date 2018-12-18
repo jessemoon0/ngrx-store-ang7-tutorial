@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {Course} from '../model/course';
@@ -15,10 +15,10 @@ import { selectLessonsLoading } from '../courses.selectors';
 @Component({
     selector: 'course',
     templateUrl: './course.component.html',
-    styleUrls: ['./course.component.css']
+    styleUrls: ['./course.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CourseComponent implements OnInit, AfterViewInit {
-
   course: Course;
   dataSource: LessonsDataSource;
   displayedColumns = ['seqNo', 'description', 'duration'];
