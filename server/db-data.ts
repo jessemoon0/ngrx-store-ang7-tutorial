@@ -96,7 +96,7 @@ export const COURSES = {
         longDescription: 'Build Applications with the official Angular Widget Library',
         category: 'ADVANCED',
         promo: false
-    },
+    }
 };
 
 
